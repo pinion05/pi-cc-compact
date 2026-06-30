@@ -1,5 +1,7 @@
 # pi-cc-compact
 
+[![npm version](https://img.shields.io/npm/v/pi-cc-compact?color=cb3837)](https://www.npmjs.com/package/pi-cc-compact) [![npm downloads](https://img.shields.io/npm/dm/pi-cc-compact?color=cb3837)](https://www.npmjs.com/package/pi-cc-compact) [![GitHub](https://img.shields.io/badge/GitHub-pinion05%2Fpi--cc--compact-181717?logo=github)](https://github.com/pinion05/pi-cc-compact) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+
 > **Claude Code's compaction prompt, ported to [pi](https://shittycodingagent.ai).**
 
 `pi-cc-compact` is a pi extension that replaces pi's default context-compaction
