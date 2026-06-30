@@ -1,5 +1,7 @@
 # pi-cc-compact
-<img width="1672" height="941" alt="ChatGPT Image 2026년 6월 30일 오후 01_39_14" src="https://github.com/user-attachments/assets/bf0bf1e1-20b6-412f-9bc3-d59397dfe0c1" />
+<img width="1672" height="941" alt="ChatGPT Image 2026년 6월 30일 오후 01_39_14" src="https://github.com/user-attachments/assets/bf0bf1e1-20b6-412f-9bc3-d59397dfe0c1" />
+
+[![npm version](https://img.shields.io/npm/v/pi-cc-compact?color=cb3837)](https://www.npmjs.com/package/pi-cc-compact) [![npm downloads](https://img.shields.io/npm/dm/pi-cc-compact?color=cb3837)](https://www.npmjs.com/package/pi-cc-compact) [![GitHub](https://img.shields.io/badge/GitHub-pinion05%2Fpi--cc--compact-181717?logo=github)](https://github.com/pinion05/pi-cc-compact) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 
 > **Claude Code's compaction prompt, ported to [pi](https://shittycodingagent.ai).**
 
