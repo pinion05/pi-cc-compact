@@ -51,11 +51,27 @@ trials each**. Full methodology and raw data: [`exp/`](./exp) and
 | Metric | pi-default | Claude-Code | Δ |
 |---|---|---|---|
 | Output length | 5,183 chars (1,296 tok) | 11,766 chars (2,942 tok) | **CC 2.27× longer** |
-| Latency | 93 s | 135 s | CC 1.45× slower |
+| Latency (all trials) | 93 s ± 45 s | 135 s ± 27 s | see below |
 | Length variance (CV) | 13 % | 25 % | CC less predictable |
 | Section coverage | 100 % (6/6) | 100 % (9/9) | tie |
 | `<analysis>`/`<summary>` tags | n/a | 10/10 | perfect compliance |
 | **Avg entity recall** | 8.3 / 10 | **10.0 / 10** | **CC perfect** |
+
+#### A note on latency (honest accounting)
+
+The headline latency ratio depends heavily on how outliers are handled:
+
+| Method | pi-default | Claude-Code | Ratio |
+|---|---|---|---|
+| All trials (n=10) | 93 s ± 45 s (range 54–168 s) | 135 s ± 27 s (range 100–190 s) | **1.45×** |
+| Drop 3 slowest each (n=7) | 63 s | 120 s | **1.89×** |
+
+pi's distribution is bimodal — three trials hit 158–168 s (likely cold/rate-limited
+starts) while the other seven cluster at 54–72 s. Including those outliers inflates
+pi's mean and makes CC look relatively faster. Trimming them, CC is closer to
+**~1.9× slower**. Treat 1.45× as the optimistic bound and ~1.9× as the typical case.
+Note also that on reasoning-capable models, hidden thinking tokens add cost not
+captured by output length or wall-clock latency.
 
 ### The real differentiator — entity recall
 
@@ -78,18 +94,43 @@ CC captures **every** entity in **every** run. pi-default silently drops long-ta
 detail — most strikingly, the entire Hypa investigation (a major subplot of the
 session) survived only 20 % of the time under pi's terse format.
 
+### Caveats — read this before trusting the numbers
+
+The benchmark above is honest (raw data in `exp/results.json`, recomputed numbers
+match) but **narrow**. Before concluding CC is objectively better, note:
+
+- **Self-referential corpus.** The only corpus tested is *the session that built
+  this package* — a CC-themed session. The entity list (Hypa, `extensions/index.ts`,
+  leak, ...) is drawn from that session. CC's prompt *forces* listing "all user
+  messages" and "files and code sections," so tokens that appear only in user
+  messages or file paths are structurally preserved by CC. On a CC-themed corpus,
+  "CC recalls CC-keywords better" is close to tautological.
+- **Surface-keyword proxy, not task performance.** "Entity recall" measures whether
+  a string appears in the summary, not whether the post-compaction agent actually
+  resumes work more successfully. A verbose summary wins keyword tests by
+  construction. Downstream task-success / error-rate was never measured.
+- **Single model.** Only `zai/glm-4.7`. Verbosity and instruction-following vary
+  across models (Claude, GPT, Gemini); results may flip elsewhere.
+- **Single corpus, n=10.** Not enough to generalize across session types (debugging,
+  feature work, multi-file refactors) or to rule out model-specific artifacts.
+
+**Bottom line:** this benchmark demonstrates that *the CC format produces more
+verbose, more keyword-complete summaries at higher cost* — which is largely the
+expected consequence of the prompt design, not a discovery. It does **not** prove
+CC yields better real-world task continuity. Treat it as a format/cost tradeoff
+characterization, not a quality verdict.
+
 ### Verdict
 
-CC trades **2.3× post-compaction context cost** and **1.45× latency** for materially
-better recall (notably the long-tail details pi's terse format omits). Both prompts
-are structurally perfect. So:
+CC trades **2.3× post-compaction context cost** and **~1.45–1.9× latency**
+(optimistic–typical) for more verbose, keyword-complete summaries. Both prompts are
+structurally perfect. So:
 
 - If you want a **lean, fast checkpoint** → keep pi's default.
-- If you want a **faithful, near-lossless carry-forward** across compactions →
-  install `pi-cc-compact`.
+- If you want a **verbose, near-lossless carry-forward** across compactions and
+  accept the cost → install `pi-cc-compact`.
 
-The cost is real (more tokens stay in context after each compaction), so this is
-best for long, complex sessions where losing "what we already figured out" hurts
+Best for long, complex sessions where losing "what we already figured out" hurts
 more than the extra tokens.
 
 ### Reproduce
