@@ -55,7 +55,6 @@ trials each**. Full methodology and raw data: [`exp/`](./exp) and
 | Latency (all trials) | 93 s ± 45 s | 135 s ± 27 s | see below |
 | Length variance (CV) | 13 % | 25 % | CC less predictable |
 | Section coverage | 100 % (6/6) | 100 % (9/9) | tie |
-| `<analysis>`/`<summary>` tags | n/a | 10/10 | perfect compliance |
 | **Avg entity recall** | 8.3 / 10 | **10.0 / 10** | **CC perfect** |
 
 #### A note on latency (honest accounting)
@@ -78,22 +77,35 @@ captured by output length or wall-clock latency.
 
 How often each key fact from the session survived compaction (out of 10 runs):
 
-| Entity | pi-default | Claude-Code |
+| Fact | pi-default | Claude-Code |
 |---|---|---|
-| pi-cc-compact (this pkg) | 10/10 | 10/10 |
-| Claude Code | 10/10 | 10/10 |
-| `session_before_compact` hook | 10/10 | 10/10 |
-| 9-section / analysis format | 10/10 | 10/10 |
-| leak source (v2.1.68) | 10/10 | 10/10 |
-| GitHub publish step | 10/10 | 10/10 |
-| `extensions/index.ts` (file) | 8/10 | **10/10** |
-| OpenRouter (tried earlier) | 7/10 | **10/10** |
-| 패키지 / Korean topic | 6/10 | **10/10** |
-| **Hypa (the suspect pkg investigated)** | **2/10** | **10/10** |
+| Fact 1 | 10/10 | 10/10 |
+| Fact 2 | 10/10 | 10/10 |
+| Fact 3 | 10/10 | 10/10 |
+| Fact 4 | 10/10 | 10/10 |
+| Fact 5 | 10/10 | 10/10 |
+| Fact 6 | 10/10 | 10/10 |
+| Fact 7 | 8/10 | **10/10** |
+| Fact 8 | 7/10 | **10/10** |
+| Fact 9 | 6/10 | **10/10** |
+| **Fact 10** | **2/10** | **10/10** |
 
-CC captures **every** entity in **every** run. pi-default silently drops long-tail
-detail — most strikingly, the entire Hypa investigation (a major subplot of the
-session) survived only 20 % of the time under pi's terse format.
+CC captures **every** fact in **every** run. pi-default silently drops long-tail
+detail — most strikingly, Fact 10 survived only 20 % of the time under pi's terse
+format.
+
+#### What each fact is
+
+- **Fact 1** — `pi-cc-compact`: the package that was built during this session.
+- **Fact 2** — **Claude Code**: the source of the compaction prompt being ported.
+- **Fact 3** — `session_before_compact`: the pi hook the extension intercepts.
+- **Fact 4** — the **9-section `<analysis>` + `<summary>`** format the prompt mandates.
+- **Fact 5** — the **leak source** (Claude Code v2.1.68 deobfuscation) the prompt was reconstructed from.
+- **Fact 6** — the **GitHub publish** step (repo created and pushed to `github.com/pinion05/pi-cc-compact`).
+- **Fact 7** — `extensions/index.ts`: the file containing the extension implementation.
+- **Fact 8** — **OpenRouter**: a provider tried earlier for the experiment but rejected (quota exceeded).
+- **Fact 9** — the **"패키지"/Korean topic**: the session opened with a Korean user message ("pi agent pakage 만드는법").
+- **Fact 10** — **Hypa** (`@hypabolic/pi-hypa`): a package investigated mid-session and flagged as a suspected download-manipulation package — a major subplot of the conversation.
 
 ### Caveats — read this before trusting the numbers
 
