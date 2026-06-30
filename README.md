@@ -40,7 +40,7 @@ trials each**. Full methodology and raw data: [`exp/`](./exp) and
 
 | Knob | Value |
 |---|---|
-| Corpus | the session that built this package (153 messages, ~78k tokens serialized) |
+| Corpus | the session that built this package (153 messages, ~78k tokens serialized, **312,919 chars ≈ 78,230 tok**) |
 | Model | `zai/glm-4.7` (free, 204k ctx) — **identical for both arms** |
 | maxTokens | 20000 (Claude Code's override), both arms |
 | Trials | 20 calls total (10 pi + 10 cc), shuffled, concurrency 5 |
@@ -51,6 +51,7 @@ trials each**. Full methodology and raw data: [`exp/`](./exp) and
 | Metric | pi-default | Claude-Code | Δ |
 |---|---|---|---|
 | Output length | 5,183 chars (1,296 tok) | 11,766 chars (2,942 tok) | **CC 2.27× longer** |
+| **Compression vs original (78,230 tok)** | **1.7% of original (1/60)** | **3.8% of original (1/27)** | CC keeps ~2.2× more |
 | Latency (all trials) | 93 s ± 45 s | 135 s ± 27 s | see below |
 | Length variance (CV) | 13 % | 25 % | CC less predictable |
 | Section coverage | 100 % (6/6) | 100 % (9/9) | tie |
