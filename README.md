@@ -26,13 +26,90 @@ event and returns the generated summary as the compaction result.
 
 ---
 
+## Does it actually help? — A/B benchmark
+
+Yes — measured head-to-head against pi's default compaction on the **exact same
+session** that produced this package, on the **same model**, across **10 interleaved
+trials each**. Full methodology and raw data: [`exp/`](./exp) and
+[`exp/RESULTS.md`](./exp/RESULTS.md).
+
+### Setup
+
+| Knob | Value |
+|---|---|
+| Corpus | the session that built this package (153 messages, ~78k tokens serialized) |
+| Model | `zai/glm-4.7` (free, 204k ctx) — **identical for both arms** |
+| maxTokens | 20000 (Claude Code's override), both arms |
+| Trials | 20 calls total (10 pi + 10 cc), shuffled, concurrency 5 |
+| Prompts | extracted verbatim from each tool's source |
+
+### Headline results (10/10 OK on both arms)
+
+| Metric | pi-default | Claude-Code | Δ |
+|---|---|---|---|
+| Output length | 5,183 chars (1,296 tok) | 11,766 chars (2,942 tok) | **CC 2.27× longer** |
+| Latency | 93 s | 135 s | CC 1.45× slower |
+| Length variance (CV) | 13 % | 25 % | CC less predictable |
+| Section coverage | 100 % (6/6) | 100 % (9/9) | tie |
+| `<analysis>`/`<summary>` tags | n/a | 10/10 | perfect compliance |
+| **Avg entity recall** | 8.3 / 10 | **10.0 / 10** | **CC perfect** |
+
+### The real differentiator — entity recall
+
+How often each key fact from the session survived compaction (out of 10 runs):
+
+| Entity | pi-default | Claude-Code |
+|---|---|---|
+| pi-cc-compact (this pkg) | 10/10 | 10/10 |
+| Claude Code | 10/10 | 10/10 |
+| `session_before_compact` hook | 10/10 | 10/10 |
+| 9-section / analysis format | 10/10 | 10/10 |
+| leak source (v2.1.68) | 10/10 | 10/10 |
+| GitHub publish step | 10/10 | 10/10 |
+| `extensions/index.ts` (file) | 8/10 | **10/10** |
+| OpenRouter (tried earlier) | 7/10 | **10/10** |
+| 패키지 / Korean topic | 6/10 | **10/10** |
+| **Hypa (the suspect pkg investigated)** | **2/10** | **10/10** |
+
+CC captures **every** entity in **every** run. pi-default silently drops long-tail
+detail — most strikingly, the entire Hypa investigation (a major subplot of the
+session) survived only 20 % of the time under pi's terse format.
+
+### Verdict
+
+CC trades **2.3× post-compaction context cost** and **1.45× latency** for materially
+better recall (notably the long-tail details pi's terse format omits). Both prompts
+are structurally perfect. So:
+
+- If you want a **lean, fast checkpoint** → keep pi's default.
+- If you want a **faithful, near-lossless carry-forward** across compactions →
+  install `pi-cc-compact`.
+
+The cost is real (more tokens stay in context after each compaction), so this is
+best for long, complex sessions where losing "what we already figured out" hurts
+more than the extra tokens.
+
+### Reproduce
+
+```bash
+git clone https://github.com/pinion05/pi-cc-compact
+cd pi-cc-compact
+node exp/load_corpus.mjs > exp/corpus.txt   # regenerate corpus from a session
+node exp/run.mjs                              # ~10 min, 20 LLM calls
+```
+
+`exp/corpus.txt` is git-ignored (it's a serialized personal session); regenerate it
+by pointing `load_corpus.mjs` at any `.jsonl` session file.
+
+---
+
 ## Why
 
 Pi's default compaction summary follows pi's own `## Goal / ## Progress / ...`
-format. Some users prefer the denser, intent-preserving style Claude Code uses —
-in particular its insistence on listing **all user messages** and the **verbatim
-last task** so intent doesn't drift across compactions. This package gives you
-that style without leaving pi.
+format — a concise checklist. Some users prefer the denser, intent-preserving style
+Claude Code uses, in particular its insistence on listing **all user messages** and
+the **verbatim last task** so intent doesn't drift across compactions. This package
+gives you that style without leaving pi.
 
 ## Install
 

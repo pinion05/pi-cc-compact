@@ -3,3 +3,8 @@ node_modules/
 .DS_Store
 dist/
 *.tgz
+
+# Experiment artifacts — keep harness + data, ignore regenerable/big files
+exp/corpus.txt
+exp/smoke.mjs
+exp/results.json.bak
