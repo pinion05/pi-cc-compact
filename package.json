@@ -1,0 +1,41 @@
+{
+  "name": "pi-cc-compact",
+  "version": "0.1.0",
+  "description": "Ports Claude Code's compaction prompt (9-section <analysis>+<summary>) to pi's session_before_compact hook. Faithful reconstruction of the leaked full-compact prompt.",
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-extension",
+    "compaction",
+    "claude-code",
+    "context"
+  ],
+  "license": "MIT",
+  "author": "pinion05",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pinion05/pi-cc-compact.git"
+  },
+  "homepage": "https://github.com/pinion05/pi-cc-compact#readme",
+  "bugs": {
+    "url": "https://github.com/pinion05/pi-cc-compact/issues"
+  },
+  "pi": {
+    "extensions": [
+      "./extensions"
+    ],
+    "skills": [
+      "./skills"
+    ]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": "*"
+  },
+  "files": [
+    "extensions",
+    "skills",
+    "README.md",
+    "LICENSE"
+  ]
+}
