@@ -1,4 +1,5 @@
 # pi-cc-compact
+<img width="1672" height="941" alt="ChatGPT Image 2026년 6월 30일 오후 01_39_14" src="https://github.com/user-attachments/assets/bf0bf1e1-20b6-412f-9bc3-d59397dfe0c1" />
 
 > **Claude Code's compaction prompt, ported to [pi](https://shittycodingagent.ai).**
 
